@@ -1,0 +1,99 @@
+<div class="mt-4">
+  <h3>Khóa học của tôi</h3>
+  <a href="/me/trash/courses">Thùng rác ({{count}})</a>
+  <div class="form-check mt-4">
+    <input class="form-check-input check-all" type="checkbox" value="" id="flexCheckDefault">
+    <label class="form-check-label" for="flexCheckDefault">Chọn Tất Cả</label>
+    <button class="btn btn-primary btn-sm btn-excute">Xóa ô chọn đã chọn</button>
+  </div>
+
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th></th>
+        <th scope="col">#</th>
+        <th scope="col">Tên Khóa học</th>
+        <th scope="col">Ngày Đăng ký</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each course}}
+      <tr>
+        <td>
+          <div class="form-check">
+            <input class="form-check-input check-course" type="checkbox" value="{{this._id}}">
+          </div>
+        </td>
+        <th scope="row">{{sum @index 1}}</th>
+        <td>{{this.name}}</td>
+        <td>{{this.createdAt}}</td>
+        <td>
+          <a href="/courses/{{this._id}}/edit">
+            <button type="button" class="btn btn-primary">Sửa</button>
+          </a>
+          <button type="submit" class="btn btn-secondary delete-btn-Course" data-bs-toggle="modal"
+            data-bs-target="#staticBackdrop" data-id="{{this._id}}">Xóa</button>
+        </td>
+      </tr>
+      {{/each}}
+  </table>
+</div>
+<form action="" method="post" hidden="true" class="form-deleted"></form>
+
+{{!-- Delete Courses --}}
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Xác nhận xóa</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">bạn có chắn chắn muốn xóa khóa học không </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" id="delete-course" class="btn btn-primary">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const deleteCourse = document.querySelector('#delete-course');
+  const formDelete = document.querySelector('.form-deleted');
+  const btnDelete = document.querySelectorAll('.delete-btn-Course');
+  const checkAll = document.querySelector('.check-all');
+  const btnExcute = document.querySelector('.btn-excute');
+  const checkCourse = document.querySelectorAll('.check-course');
+
+  btnDelete.forEach((btn) => {
+    deleteCourse.onclick = function () {
+      formDelete.action = `/courses/${btn.dataset.id}?_method=DELETE`;
+      formDelete.submit();
+    }
+  })
+  // check Course
+  checkAll.onclick = function (e) {
+    checkCourse.forEach((item) => item.checked = this.checked)
+  }
+  let countCheckCourse = true;
+  Array.from(checkCourse).forEach((item) => {
+    item.onchange = function () {
+      let countCheckCourse = Array.from(checkCourse).every((course) => course.checked === true);
+      countCheckCourse ? (checkAll.checked = true) : (checkAll.checked = false)
+
+    }
+  })
+
+  btnExcute.onclick = function () {
+    let arr = []
+    checkCourse.forEach((item) => {
+      item.checked && arr.push(item.value)
+      if (item.checked === true) {
+        formDelete.action = `/courses/${arr}/mutildelete`;
+        formDelete.submit()
+      }
+    })
+  }
+</script>

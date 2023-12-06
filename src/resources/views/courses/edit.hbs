@@ -1,0 +1,15 @@
+<form action="/courses/{{id._id}}?_method=PUT" method="POST">
+    <div class="mb-3">
+        <label for="name" class="form-label">name</label>
+        <input type="text" name="name" class="form-control" id="name" placeholder="name courses" value="{{id.name}}">
+    </div>
+    <div class="mb-3">
+        <label for="name" class="form-label">image</label>
+        <input type="text" name="image" class="form-control" id="name" value="{{id.image}}">
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">description</label>
+        <textarea class="form-control" id="description" name="description" rows="2">{{id.description}}</textarea>
+    </div>
+    <button type="submit" class="btn">Save</button>
+</form>
